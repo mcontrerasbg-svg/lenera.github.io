@@ -490,13 +490,21 @@
     <div id="toast-container" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[120] flex flex-col gap-3 items-end pointer-events-none"></div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'lenera-temuco-cloud-v3';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const appId = 'lenera-temuco';
+    const firebaseConfig = {
+      apiKey: "AIzaSyCgcO1NmhYEikYL6bBmDo69LjDxCgusgPA",
+      authDomain: "lenera-temuco.firebaseapp.com",
+      projectId: "lenera-temuco",
+      storageBucket: "lenera-temuco.firebasestorage.app",
+      messagingSenderId: "155973259937",
+      appId: "1:155973259937:web:d4cff64238a1d8ebe156e0",
+      measurementId: "G-FZERLC1ZEW"
+    };
+    const initialAuthToken = null;
 
         let db = null;
         let datos = { ventas: [], gastos: [], agenda: [] };
