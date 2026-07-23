@@ -228,6 +228,7 @@
                     </div>
                 </div>
 
+                <!-- VISTA: VENTAS RÁPIDAS -->
                 <div id="view-ventas" class="view-section hidden animate-fade-in">
                     <div class="flex items-center justify-between mb-6 hidden md:flex">
                         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Registro de Ventas</h2>
@@ -240,6 +241,7 @@
                                 <h3 class="text-lg font-bold text-gray-800">Nueva Venta</h3>
                             </div>
                             
+                            <!-- FORMULARIO DE VENTAS ACTUALIZADO -->
                             <form id="form-venta" onsubmit="registrarVenta(event)" class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tipo de Leña</label>
@@ -248,10 +250,14 @@
                                         <option value="Eucalipto">Eucalipto</option>
                                     </select>
                                 </div>
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-3 gap-4">
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sacos</label>
-                                        <input type="number" id="v-cantidad" min="1" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none text-center font-bold text-gray-800" placeholder="0" required>
+                                        <input type="number" id="v-cantidad" min="1" oninput="calcularTotalVenta()" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none text-center font-bold text-gray-800" placeholder="0" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Precio ($)</label>
+                                        <input type="number" id="v-precio-saco" min="0" oninput="calcularTotalVenta()" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none text-center font-bold text-gray-800" value="4000" required>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pago</label>
@@ -265,14 +271,14 @@
                                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Valor Flete ($) <span class="text-xs text-gray-400 font-normal ml-1">Opcional</span></label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
-                                        <input type="number" id="v-despacho" class="w-full pl-8 pr-3 py-3 border border-gray-200 bg-gray-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none" placeholder="Ej: 3000" value="0">
+                                        <input type="number" id="v-despacho" oninput="calcularTotalVenta()" class="w-full pl-8 pr-3 py-3 border border-gray-200 bg-gray-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none" placeholder="Ej: 3000" value="0">
                                     </div>
                                 </div>
                                 <div class="pt-2">
                                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Total Recaudado ($)</label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-lg">$</span>
-                                        <input type="number" id="v-total" class="w-full pl-8 pr-3 py-3.5 border-2 border-gray-200 bg-white rounded-xl focus:ring-2 focus:ring-fire-500 outline-none font-black text-xl text-gray-900 shadow-inner" placeholder="0" required>
+                                        <input type="number" id="v-total" readonly class="w-full pl-8 pr-3 py-3.5 border-2 border-gray-200 bg-gray-100 rounded-xl focus:ring-2 focus:ring-fire-500 outline-none font-black text-xl text-gray-900 shadow-inner" placeholder="0" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
@@ -303,6 +309,7 @@
                     </div>
                 </div>
 
+                <!-- VISTA: AGENDA -->
                 <div id="view-agenda" class="view-section hidden animate-fade-in">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <h2 class="text-2xl font-bold text-gray-800 tracking-tight hidden md:block">Agenda de Despachos</h2>
@@ -313,6 +320,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="lista-agenda"></div>
                 </div>
 
+                <!-- VISTA: GASTOS -->
                 <div id="view-gastos" class="view-section hidden animate-fade-in">
                     <div class="flex items-center justify-between mb-6 hidden md:flex">
                         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Control de Gastos</h2>
@@ -368,7 +376,7 @@
         </main>
     </div>
 
-    <!-- Modal Nueva Agenda -->
+    <!-- Modal Nueva Agenda ACTUALIZADO -->
     <div id="modal-agenda" class="fixed inset-0 bg-wood-900/60 backdrop-blur-sm z-[60] hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform translate-y-full sm:translate-y-0 transition-transform duration-300 flex flex-col max-h-[90vh]">
             <div class="bg-white border-b border-gray-100 p-5 flex justify-between items-center sticky top-0 z-10">
@@ -408,7 +416,7 @@
 
                     <div>
                         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">2. Detalle del Pedido</h4>
-                        <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tipo de Leña</label>
                                 <select id="a-tipo" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none font-medium text-gray-700" required>
@@ -418,7 +426,11 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Sacos</label>
-                                <input type="number" id="a-cantidad" min="1" class="w-full px-3 py-3 border border-gray-200 bg-gray-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none text-center font-bold text-gray-800" required>
+                                <input type="number" id="a-cantidad" min="1" oninput="calcularTotalAgenda()" class="w-full px-3 py-3 border border-gray-200 bg-gray-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none text-center font-bold text-gray-800" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Precio ($)</label>
+                                <input type="number" id="a-precio-saco" min="0" oninput="calcularTotalAgenda()" class="w-full px-3 py-3 border border-gray-200 bg-gray-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none text-center font-bold text-gray-800" value="4000" required>
                             </div>
                         </div>
                         <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-2">
@@ -433,7 +445,7 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Valor del Flete ($)</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
-                                    <input type="number" id="a-despacho-valor" class="w-full pl-8 pr-3 py-2.5 border border-gray-200 bg-white rounded-lg focus:ring-2 focus:ring-fire-500 outline-none transition-all" value="0">
+                                    <input type="number" id="a-despacho-valor" oninput="calcularTotalAgenda()" class="w-full pl-8 pr-3 py-2.5 border border-gray-200 bg-white rounded-lg focus:ring-2 focus:ring-fire-500 outline-none transition-all" value="0">
                                 </div>
                             </div>
                         </div>
@@ -455,7 +467,7 @@
                                 <label class="block text-sm font-semibold text-gray-700 mb-1.5">Total ($)</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
-                                    <input type="number" id="a-total" class="w-full pl-8 pr-3 py-3 border-2 border-gray-200 bg-white rounded-xl focus:ring-2 focus:ring-fire-500 outline-none font-black text-gray-900 shadow-inner" required>
+                                    <input type="number" id="a-total" readonly class="w-full pl-8 pr-3 py-3 border-2 border-gray-200 bg-gray-100 rounded-xl focus:ring-2 focus:ring-fire-500 outline-none font-black text-gray-900 shadow-inner" required>
                                 </div>
                             </div>
                         </div>
@@ -490,65 +502,51 @@
     <div id="toast-container" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[120] flex flex-col gap-3 items-end pointer-events-none"></div>
 
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const appId = 'lenera-temuco';
-    const firebaseConfig = {
-      apiKey: "AIzaSyCgcO1NmhYEikYL6bBmDo69LjDxCgusgPA",
-      authDomain: "lenera-temuco.firebaseapp.com",
-      projectId: "lenera-temuco",
-      storageBucket: "lenera-temuco.firebasestorage.app",
-      messagingSenderId: "155973259937",
-      appId: "1:155973259937:web:d4cff64238a1d8ebe156e0",
-      measurementId: "G-FZERLC1ZEW"
-    };
-    const initialAuthToken = null;
+        // TUS CREDENCIALES EXACTAS PARA QUE NO SE DESCONECTE
+        const appId = 'lenera-temuco';
+        const firebaseConfig = {
+            apiKey: "AIzaSyCgcO1NmhYEikYL6bBmDo69LjDxCgusgPA",
+            authDomain: "lenera-temuco.firebaseapp.com",
+            projectId: "lenera-temuco",
+            storageBucket: "lenera-temuco.firebasestorage.app",
+            messagingSenderId: "155973259937",
+            appId: "1:155973259937:web:d4cff64238a1d8ebe156e0",
+            measurementId: "G-FZERLC1ZEW"
+        };
+        const initialAuthToken = null;
 
         let db = null;
         let datos = { ventas: [], gastos: [], agenda: [] };
         let modoOffline = false;
 
-        // Rutas de almacenamiento local por si no hay conexión externa
         const LOCAL_KEY = 'lenera_temuco_local_data_v1';
 
-        function guardarLocal() {
-            localStorage.setItem(LOCAL_KEY, JSON.stringify(datos));
-        }
-
+        function guardarLocal() { localStorage.setItem(LOCAL_KEY, JSON.stringify(datos)); }
         function cargarLocal() {
             const guardado = localStorage.getItem(LOCAL_KEY);
-            if (guardado) {
-                try { datos = JSON.parse(guardado); } catch(e){}
-            }
+            if (guardado) { try { datos = JSON.parse(guardado); } catch(e){} }
         }
 
         async function initApp() {
-            // Configurar fecha UI
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('es-CL', dateOptions);
 
             try {
-                if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) {
-                    throw new Error("Sin configuración de Firebase en este entorno.");
-                }
+                if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) throw new Error("Sin configuración de Firebase");
 
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
                 db = getFirestore(app);
 
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                // Iniciar escuchas en la nube con un temporizador de seguridad por si bloquea
+                await signInAnonymously(auth);
                 iniciarConexionBaseDatos();
 
             } catch (error) {
-                console.warn("Entrando en Modo Respaldo Local (Archivo descargado):", error);
+                console.warn("Entrando en Modo Respaldo Local:", error);
                 modoOffline = true;
                 cargarLocal();
                 activarInterfazApp(true);
@@ -582,10 +580,8 @@
         function iniciarConexionBaseDatos() {
             let conectado = false;
             
-            // Timeout por si la red o el entorno bloquean la conexión inicial
             const timer = setTimeout(() => {
                 if (!conectado) {
-                    console.warn("La nube tardó en responder. Activando modo local de respaldo.");
                     modoOffline = true;
                     cargarLocal();
                     activarInterfazApp(true);
@@ -605,11 +601,7 @@
                     if (document.getElementById('loading-overlay')) activarInterfazApp(false);
                 }
             }, (err) => {
-                if (!modoOffline) {
-                    modoOffline = true;
-                    cargarLocal();
-                    activarInterfazApp(true);
-                }
+                if (!modoOffline) { modoOffline = true; cargarLocal(); activarInterfazApp(true); }
             });
 
             onSnapshot(getColRef('gastos'), (snapshot) => {
@@ -641,6 +633,7 @@
                 id: 'local_' + Date.now(),
                 tipo: document.getElementById('v-tipo').value,
                 cant: parseInt(document.getElementById('v-cantidad').value),
+                precioSaco: parseInt(document.getElementById('v-precio-saco').value) || 0,
                 pago: document.getElementById('v-pago').value,
                 despacho: parseInt(document.getElementById('v-despacho').value) || 0,
                 total: parseInt(document.getElementById('v-total').value),
@@ -652,6 +645,7 @@
                 guardarLocal();
                 e.target.reset();
                 document.getElementById('v-despacho').value = "0";
+                document.getElementById('v-precio-saco').value = "4000";
                 actualizarUI();
                 showToast('Venta registrada (Local)');
                 btn.disabled = false;
@@ -659,11 +653,12 @@
                 try {
                     const getColRef = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
                     await addDoc(getColRef('ventas'), {
-                        tipo: nuevaVenta.tipo, cant: nuevaVenta.cant, pago: nuevaVenta.pago,
+                        tipo: nuevaVenta.tipo, cant: nuevaVenta.cant, precioSaco: nuevaVenta.precioSaco, pago: nuevaVenta.pago,
                         despacho: nuevaVenta.despacho, total: nuevaVenta.total, fecha: nuevaVenta.fecha
                     });
                     e.target.reset();
                     document.getElementById('v-despacho').value = "0";
+                    document.getElementById('v-precio-saco').value = "4000";
                     showToast('Venta registrada en la nube');
                 } catch (err) {
                     showToast('Error al guardar', 'error');
@@ -750,6 +745,7 @@
                 telefono: document.getElementById('a-telefono').value,
                 tipo: document.getElementById('a-tipo').value,
                 cant: parseInt(document.getElementById('a-cantidad').value),
+                precioSaco: parseInt(document.getElementById('a-precio-saco').value) || 0,
                 pago: document.getElementById('a-pago').value,
                 total: parseInt(document.getElementById('a-total').value),
                 despacho: tieneDespacho ? (parseInt(document.getElementById('a-despacho-valor').value) || 0) : 0,
@@ -802,7 +798,7 @@
                     datos.agenda = datos.agenda.filter(a => a.id !== id);
                     datos.ventas.unshift({
                         id: 'local_' + Date.now(),
-                        tipo: pedido.tipo, cant: pedido.cant, pago: pedido.pago,
+                        tipo: pedido.tipo, cant: pedido.cant, precioSaco: pedido.precioSaco, pago: pedido.pago,
                         despacho: pedido.despacho || 0, total: pedido.total,
                         fecha: new Date().toISOString()
                     });
@@ -815,7 +811,7 @@
                         const getDocRef = (colName, docId) => doc(db, 'artifacts', appId, 'public', 'data', colName, docId);
                         
                         await addDoc(getColRef('ventas'), {
-                            tipo: pedido.tipo, cant: pedido.cant, pago: pedido.pago,
+                            tipo: pedido.tipo, cant: pedido.cant, precioSaco: pedido.precioSaco || 4000, pago: pedido.pago,
                             despacho: pedido.despacho || 0, total: pedido.total,
                             fecha: new Date().toISOString()
                         });
@@ -1005,6 +1001,23 @@
             const div = document.getElementById('div-valor-despacho-ui');
             if(tiene) { div.classList.remove('hidden'); div.classList.add('animate-slide-up'); }
             else { div.classList.add('hidden'); document.getElementById('a-despacho-valor').value = "0"; }
+            calcularTotalAgenda();
+        }
+        
+        // --- LA MATEMÁTICA AUTOMÁTICA ---
+        window.calcularTotalVenta = () => {
+            const cant = parseInt(document.getElementById('v-cantidad').value) || 0;
+            const precio = parseInt(document.getElementById('v-precio-saco').value) || 0;
+            const despacho = parseInt(document.getElementById('v-despacho').value) || 0;
+            document.getElementById('v-total').value = (cant * precio) + despacho;
+        }
+
+        window.calcularTotalAgenda = () => {
+            const cant = parseInt(document.getElementById('a-cantidad').value) || 0;
+            const precio = parseInt(document.getElementById('a-precio-saco').value) || 0;
+            const tieneDespacho = document.getElementById('a-tiene-despacho-chk').checked;
+            const despacho = tieneDespacho ? (parseInt(document.getElementById('a-despacho-valor').value) || 0) : 0;
+            document.getElementById('a-total').value = (cant * precio) + despacho;
         }
 
         window.switchView = (viewId) => {
