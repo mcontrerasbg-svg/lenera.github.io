@@ -243,12 +243,18 @@
                             
                             <!-- FORMULARIO DE VENTAS ACTUALIZADO -->
                             <form id="form-venta" onsubmit="registrarVenta(event)" class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tipo de Leña</label>
-                                    <select id="v-tipo" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none font-medium text-gray-700" required>
-                                        <option value="Hualle">Hualle / Roble</option>
-                                        <option value="Eucalipto">Eucalipto</option>
-                                    </select>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Fecha</label>
+                                        <input type="date" id="v-fecha" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none font-medium text-gray-700" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tipo de Leña</label>
+                                        <select id="v-tipo" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none font-medium text-gray-700" required>
+                                            <option value="Hualle">Hualle / Roble</option>
+                                            <option value="Eucalipto">Eucalipto</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-4">
                                     <div>
@@ -334,6 +340,10 @@
                             </div>
                             
                             <form id="form-gasto" onsubmit="registrarGasto(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Fecha</label>
+                                    <input type="date" id="g-fecha" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none font-medium text-gray-700" required>
+                                </div>
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1.5">Descripción</label>
                                     <input type="text" id="g-desc" class="w-full border border-gray-200 bg-gray-50 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-fire-500 outline-none" required>
@@ -531,6 +541,30 @@
             if (guardado) { try { datos = JSON.parse(guardado); } catch(e){} }
         }
 
+        function establecerFechasPorDefecto() {
+            const hoy = new Date();
+            const offset = hoy.getTimezoneOffset();
+            const fechaLocal = new Date(hoy.getTime() - (offset*60*1000)).toISOString().split('T')[0];
+            
+            if(document.getElementById('v-fecha')) document.getElementById('v-fecha').value = fechaLocal;
+            if(document.getElementById('g-fecha')) document.getElementById('g-fecha').value = fechaLocal;
+        }
+
+        function obtenerFechaDesdeInput(inputId) {
+            const inputVal = document.getElementById(inputId).value;
+            if (!inputVal) return new Date().toISOString();
+
+            const hoy = new Date();
+            const offset = hoy.getTimezoneOffset();
+            const hoyLocal = new Date(hoy.getTime() - (offset*60*1000)).toISOString().split('T')[0];
+
+            if (inputVal === hoyLocal) {
+                return new Date().toISOString(); // Si es el día de hoy, guarda la hora exacta actual
+            } else {
+                return new Date(inputVal + 'T12:00:00').toISOString(); // Si es de un día pasado, lo guarda a mediodía de ese día
+            }
+        }
+
         async function initApp() {
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('es-CL', dateOptions);
@@ -551,6 +585,8 @@
                 cargarLocal();
                 activarInterfazApp(true);
             }
+            
+            establecerFechasPorDefecto();
         }
 
         function activarInterfazApp(esLocal = false) {
@@ -637,13 +673,14 @@
                 pago: document.getElementById('v-pago').value,
                 despacho: parseInt(document.getElementById('v-despacho').value) || 0,
                 total: parseInt(document.getElementById('v-total').value),
-                fecha: new Date().toISOString()
+                fecha: obtenerFechaDesdeInput('v-fecha')
             };
 
             if (modoOffline || !db) {
                 datos.ventas.unshift(nuevaVenta);
                 guardarLocal();
                 e.target.reset();
+                establecerFechasPorDefecto();
                 document.getElementById('v-despacho').value = "0";
                 document.getElementById('v-precio-saco').value = "4000";
                 actualizarUI();
@@ -657,6 +694,7 @@
                         despacho: nuevaVenta.despacho, total: nuevaVenta.total, fecha: nuevaVenta.fecha
                     });
                     e.target.reset();
+                    establecerFechasPorDefecto();
                     document.getElementById('v-despacho').value = "0";
                     document.getElementById('v-precio-saco').value = "4000";
                     showToast('Venta registrada en la nube');
@@ -694,13 +732,14 @@
                 id: 'local_' + Date.now(),
                 desc: document.getElementById('g-desc').value,
                 monto: parseInt(document.getElementById('g-monto').value),
-                fecha: new Date().toISOString()
+                fecha: obtenerFechaDesdeInput('g-fecha')
             };
 
             if (modoOffline || !db) {
                 datos.gastos.unshift(nuevoGasto);
                 guardarLocal();
                 e.target.reset();
+                establecerFechasPorDefecto();
                 actualizarUI();
                 showToast('Gasto registrado (Local)');
                 btn.disabled = false;
@@ -709,6 +748,7 @@
                     const getColRef = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
                     await addDoc(getColRef('gastos'), { desc: nuevoGasto.desc, monto: nuevoGasto.monto, fecha: nuevoGasto.fecha });
                     e.target.reset();
+                    establecerFechasPorDefecto();
                     showToast('Gasto registrado');
                 } catch (err) {
                     showToast('Error', 'error');
