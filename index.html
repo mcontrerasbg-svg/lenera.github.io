@@ -151,7 +151,15 @@
                             estadoCaja = data.estadoCaja || estadoCaja; aperturaCaja = data.aperturaCaja || aperturaCaja;
                             gastosCaja = data.gastosCaja || gastosCaja; ventasDiarias = data.ventasDiarias || ventasDiarias;
                             historialVentas = data.historialVentas || historialVentas; platosSacadosCocina = data.platosSacadosCocina || platosSacadosCocina;
+                            
+                            // Safety Check para Usuarios
                             listaUsuarios = data.listaUsuarios || listaUsuarios;
+                            if (!Array.isArray(listaUsuarios) || listaUsuarios.length === 0) {
+                                listaUsuarios = [ { email: 'admin@laquerencia.cl', pass: '1234', rol: 'administradora' } ];
+                            }
+                            if (!listaUsuarios.some(u => u.email === 'admin@laquerencia.cl')) {
+                                listaUsuarios.push({ email: 'admin@laquerencia.cl', pass: '1234', rol: 'administradora' });
+                            }
 
                             if (rolActual) {
                                 window.renderizarTodasLasMesas(); window.renderizarCocina(); window.actualizarUICaja();
@@ -171,6 +179,15 @@
         window.intentarLogin = function(e) {
             try {
                 if(e && e.preventDefault) e.preventDefault();
+                
+                // BACKUP EXTREMO: Asegurar que admin SIEMPRE existe antes de buscar
+                if (!Array.isArray(listaUsuarios) || listaUsuarios.length === 0) {
+                    listaUsuarios = [ { email: 'admin@laquerencia.cl', pass: '1234', rol: 'administradora' } ];
+                }
+                if (!listaUsuarios.some(u => u.email === 'admin@laquerencia.cl')) {
+                    listaUsuarios.push({ email: 'admin@laquerencia.cl', pass: '1234', rol: 'administradora' });
+                }
+
                 const email = document.getElementById('login-email').value.trim().toLowerCase();
                 const pass = document.getElementById('login-pass').value.trim();
 
